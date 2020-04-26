@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <nn/Layer/SigmoidLayer.hpp>
+#include <nn/Layer/SoftmaxLayer.hpp>
 #include <nn/Model/Sequential.hpp>
 
 int main()
@@ -9,6 +10,7 @@ int main()
 
     net.PushLayer<nn::SigmoidLayer>(4);
     net.PushLayer<nn::SigmoidLayer>(4);
+    net.PushLayer<nn::SoftmaxLayer>(4);
 
     nn::Layer::Tensor input{ 2, 3, 4, 5 };
 
