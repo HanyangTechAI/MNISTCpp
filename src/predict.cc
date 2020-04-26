@@ -1,17 +1,22 @@
 #include <iostream>
 
 #include <nn/Layer/ReLULayer.hpp>
+#include <nn/Model/Sequential.hpp>
 
 int main()
 {
-    nn::ReLULayer<int> layer(3);
+    constexpr std::size_t N = 100000000;
 
-    layer.Forward({-1, 3, 5});
+    nn::Sequential net;
 
-    const auto& output = layer.Output();
+    net.PushLayer<nn::ReLULayer>(N);
+    net.PushLayer<nn::ReLULayer>(N);
+    net.PushLayer<nn::ReLULayer>(N);
+    net.PushLayer<nn::ReLULayer>(N);
+    net.PushLayer<nn::ReLULayer>(N);
+    net.PushLayer<nn::ReLULayer>(N);
 
-    for (const auto& v : output)
-        std::cout << v << ' ';
+    nn::Layer::Tensor input(N);
 
-    std::cout << std::endl;
+    net.Forward(input);
 }
