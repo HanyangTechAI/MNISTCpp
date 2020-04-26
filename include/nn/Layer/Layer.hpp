@@ -7,9 +7,11 @@
 
 namespace nn
 {
-template <typename DT>
 class Layer
 {
+ public:
+    using Tensor = std::vector<float>;
+
  public:
     Layer(std::size_t inSize, std::size_t outSize)
         : inSize_(inSize), outSize_(outSize)
@@ -33,26 +35,26 @@ class Layer
         return outSize_;
     }
 
-    void Forward(const std::vector<DT>& input)
+    void Forward(const Tensor& input)
     {
         assert(input.size() == inSize_);
 
         forward_impl(input, output_);
     }
 
-    const std::vector<DT>& Output() const
+    const Tensor& Output() const
     {
         return output_;
     }
 
  private:
-    virtual void forward_impl(const std::vector<DT>& input, std::vector<DT>& output) = 0;
+    virtual void forward_impl(const Tensor& input, Tensor& output) = 0;
 
  private:
     std::size_t inSize_;
     std::size_t outSize_;
 
-    std::vector<DT> output_;
+    Tensor output_;
 };
 }  // namespace nn
 

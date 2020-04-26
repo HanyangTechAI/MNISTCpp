@@ -4,25 +4,32 @@
 #include <nn/Layer/Layer.hpp>
 
 #include <algorithm>
-#include <execution>
 
 namespace nn
 {
-template <typename DT>
-class ReLULayer : public Layer<DT>
+class ReLULayer : public Layer
 {
  public:
     ReLULayer(std::size_t outSize)
-        : Layer<DT>(outSize, outSize)
+        : Layer(outSize, outSize)
     {
     }
 
+    ReLULayer(const ReLULayer&) = delete;
+    ReLULayer(ReLULayer&&) = delete;
+    ReLULayer& operator=(const ReLULayer&) = delete;
+    ReLULayer& operator=(ReLULayer&&) = delete;
+
  private:
-    void forward_impl(const std::vector<DT>& input, std::vector<DT>& output) override
+    void forward_impl(const Layer::Tensor& input, Layer::Tensor& output) override
     {
-        std::transform(std::execution::par, begin(input), end(input), begin(output), [](DT value) {
-            return std::max<DT>(value, static_cast<DT>(0));
-        });
+        const std::size_t inSize = InputSize();
+
+        #pragma omp parallel for
+        for (long long i = 0; i < inSize; ++i)
+        {
+            output[i] = std::max(input[i], 0.f);
+        }
     }
 };
 }  // namespace nn
